@@ -148,7 +148,7 @@ RSpec.describe Account do
 
       it 'with correct outout' do
         allow(File).to receive(:open)
-        ASK_PHRASES.values.each { |phrase| expect(current_subject).to receive(:puts).with(phrase) }
+        ASK_PHRASES.each_value { |phrase| expect(current_subject).to receive(:puts).with(phrase) }
         ACCOUNT_VALIDATION_PHRASES.values.map(&:values).each do |phrase|
           expect(current_subject).not_to receive(:puts).with(phrase)
         end
@@ -692,7 +692,8 @@ RSpec.describe Account do
           context 'with tax lower than amount' do
             let(:custom_cards) do
               [
-                { type: 'usual', balance: default_balance, tax: correct_money_amount_greater_than_tax * 0.02, number: 1 },
+                { type: 'usual', balance: default_balance, tax: correct_money_amount_greater_than_tax * 0.02,
+                  number: 1 },
                 { type: 'capitalist', balance: default_balance, tax: 10, number: 1 },
                 { type: 'virtual', balance: default_balance, tax: 1, number: 1 }
               ]

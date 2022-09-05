@@ -1,3 +1,3 @@
-require_relative 'account'
+require_relative './lib/account'
 
 Account.new.console

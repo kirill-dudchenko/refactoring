@@ -1,0 +1,31 @@
+en:
+  console_welcome_prompt: "Hello, we are RubyG bank!\n
+  - If you want to create account - press `create`\n
+  - If you want to load account - press `load`\n
+  - If you want to exit - press `exit`\n"
+  create_command: "create"
+  load_command: "load"
+  main_menu_message: "If you want to:\n
+  - show all cards - press SC\n
+  - create card - press CC\n
+  - destroy card - press DC\n
+  - put money on card - press PM\n
+  - withdraw money on card - press WM\n
+  - send money to another card  - press SM'\n
+  - destroy account - press `DA`\n
+  - exit from account - press `exit`"
+  create_first_account_prompt: "There is no active accounts, do you want to be the first?[y/n]"
+  enter_login: "Enter your login"
+  enter_password: "Enter your password"
+  create_card_prompt: "You could create one of 3 card types
+  - Usual card. 2% tax on card INCOME. 20$ tax on SENDING money from this card. 5% tax on WITHDRAWING money. For creation this card - press `usual`\n
+  - Capitalist card. 10$ tax on card INCOME. 10% tax on SENDING money from this card. 4$ tax on WITHDRAWING money. For creation this card - press `capitalist`\n
+  - Virtual card. 1$ tax on card INCOME. 1$ tax on SENDING money from this card. 12% tax on WITHDRAWING money. For creation this card - press `virtual`\n
+  - For exit - press `exit`"
+  wrong_command: "Wrong command. Try again!"
+  no_such_account: "There is no account with given credentials"
+  destroy_double_check: "Are you sure you want to destroy account?[y/n]"
+  name_prompt: "Enter your name"
+  login_prompt: "Enter your login"
+  password_prompt: "Enter your password"
+  age_prompt: "Enter your age"

@@ -1,0 +1,8 @@
+require 'yaml'
+require 'pry'
+require_relative 'validations'
+require_relative 'messaging'
+require_relative 'bank'
+require_relative 'card'
+require_relative 'money'
+require_relative 'main_menu'
