@@ -5,10 +5,10 @@ class Account
   include MainMenu
   include Messaging
 
-  attr_accessor :login, :name, :card, :password, :file_path
+  attr_reader :login, :name, :password
+  attr_accessor :card
 
   def initialize
-    @bank = Bank.new
     @file_path = 'accounts.yml'
     @card = []
   end
@@ -27,24 +27,24 @@ class Account
     age_input
     login_input
     password_input
-    @bank.accounts << self
-    @bank.current_account = self
-    File.open(@file_path, 'w') { |f| f.write @bank.accounts.to_yaml }
+    Bank.add_account(self)
+    Bank.new_current_account(self)
+    File.open(@file_path, 'w') { |f| f.write Bank.accounts.to_yaml }
     main_menu
   end
 
   def load
-    return create_the_first_account unless @bank.accounts.any?
+    return create_the_first_account unless Bank.accounts.any?
 
-    check_credentials(get_login, get_password)
+    check_credentials(input_login, input_password)
     main_menu
   end
 
   def check_credentials(login, password)
-    if @bank.accounts.map do |account|
+    if Bank.accounts.map do |account|
       { login: account.login, password: account.password }
     end.include?({ login: login, password: password })
-      @bank.current_account = @bank.accounts.select { |account| login == account.login }.first
+      Bank.new_current_account(Bank.accounts.select { |account| login == account.login }.first)
     else
       no_such_account
       load
@@ -59,8 +59,8 @@ class Account
   def destroy_account
     destroy_double_check
     if input == 'y'
-      @bank.accounts.delete(@bank.current_account)
-      File.open(@file_path, 'w') { |f| f.write @bank.accounts.to_yaml }
+      Bank.accounts.delete(Bank.current_account)
+      File.open(@file_path, 'w') { |f| f.write Bank.accounts.to_yaml }
     end
     exit
   end

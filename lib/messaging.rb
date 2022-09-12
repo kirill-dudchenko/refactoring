@@ -5,7 +5,7 @@ module Messaging
   I18n.config.available_locales = :en
 
   def input
-    user_input = gets.chomp.strip
+    gets.chomp.strip
   end
 
   def console_welcome_prompt
@@ -16,14 +16,14 @@ module Messaging
     puts I18n.t(:welcome)
   end
 
-  def get_login
+  def input_login
     puts I18n.t(:enter_login)
-    login = input
+    input
   end
 
-  def get_password
+  def input_password
     puts I18n.t(:enter_password)
-    password = input
+    input
   end
 
   def wrong_command
@@ -46,11 +46,40 @@ module Messaging
     puts I18n.t(:login_prompt)
   end
 
-  def name_prompt
+  def password_prompt
     puts I18n.t(:password_prompt)
   end
 
   def age_prompt
     puts I18n.t(:age_prompt)
+  end
+
+  def wrong_card_type
+    puts I18n.t(:wrong_card_type)
+  end
+
+  def choose_card(method)
+    case method
+    when 'withdraw' then puts I18n.t(:choose_card_withdraw)
+    when 'put' then puts I18n.t(:choose_card_put)
+    when 'sender' then puts I18n.t(:choose_card_sender)
+    when 'recipient' then puts I18n.t(:choose_card_recipient)
+    end
+  end
+
+  def input_withdraw_amount
+    puts I18n.t(:input_withdraw_amount)
+  end
+
+  def exit_prompt
+    puts I18n.t(:exit_prompt)
+  end
+
+  def input_money_to_send
+    puts I18n.t(:input_money_to_send)
+  end
+
+  def wrong_number
+    puts I18n.t(:wrong_number)
   end
 end
