@@ -43,3 +43,16 @@ en:
   insufficient_funds: "You don't have enough money on card for such operation"
   exit_prompt: "press `exit` to exit\n"
   input_money_to_send: "Input the amount of money you want to withdraw"
+  name_empty_error: 'Your name must not be empty'
+  capital_error: 'Your name must start with a capital letter'
+  login_empty_error: 'Your name must not be empty'
+  short_login_error: 'Login must be longer then 4 symbols'
+  long_login_error: 'Login must be shorter then 20 symbols'
+  password_empty_error: 'Password must be present'
+  short_password_error: 'Password must be longer then 6 symbols'
+  long_password_error: 'Password must be shorter then 30 symbols'
+  account_exists_error: 'Such account is already exists'
+  integer_error: 'Your Age must be Integer'
+  young_age_error: 'Your Age must be greater than 22'
+  old_age_error: 'Your Age must be less than 91'
+  tax_higher_than_input: 'Your tax is higher than input amount'

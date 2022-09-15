@@ -62,6 +62,7 @@ GEM
     simplecov-html (0.12.3)
     simplecov-lcov (0.8.0)
     simplecov_json_formatter (0.1.4)
+    singleton (0.1.1)
     undercover (0.4.5)
       imagen (>= 0.1.8)
       rainbow (>= 2.1, < 4.0)
@@ -80,6 +81,7 @@ DEPENDENCIES
   rubocop-rspec
   simplecov
   simplecov-lcov
+  singleton
   undercover
 
 BUNDLED WITH

@@ -1,5 +1,7 @@
 class Card
+  include SaveLoad
   include Validations
+  include Messaging
 
   def initialize
     @file_path = 'accounts.yml'
@@ -8,16 +10,17 @@ class Card
   def create_card
     puts I18n.t(:create_card_prompt)
     card = card_type
-    Bank.accounts[Bank.accounts.find_index(Bank.current_account)].card << card
-    File.open(@file_path, 'w') { |f| f.write Bank.accounts.to_yaml } # Storing
+    Bank.instance.accounts[Bank.instance.accounts.find_index(Bank.instance.current_account)].card << card
+    save
   end
 
   def destroy_card
-    no_active_cards unless Bank.current_account.card.any?
+    return no_active_cards unless Bank.instance.current_account.card.any?
+
     cards_to_delete
     answer = input
-    if answer.to_i <= Bank.current_account.card.length && answer.to_i.positive?
-      puts "Are you sure you want to delete #{Bank.current_account.card[answer.to_i - 1][:number]}?[y/n]"
+    if answer.to_i <= Bank.instance.current_account.card.length && answer.to_i.positive?
+      puts "Are you sure you want to delete #{Bank.instance.current_account.card[answer.to_i - 1].number}?[y/n]"
       input == 'y' ? delete_card_and_update(answer) : return
     else
       wrong_number
@@ -26,37 +29,21 @@ class Card
   end
 
   def show_cards
-    if Bank.current_account.card.any?
-      Bank.current_account.card.each do |c|
-        puts "- #{c[:number]}, #{c[:type]}"
-      end
-    else
-      puts "There is no active cards!\n"
-    end
+    cards = Bank.instance.current_account.card
+    cards.empty? ? no_active_cards : cards.each { |card| puts "- #{card.number}, #{card.type}" }
   end
 
   private
 
-  def input
-    user_input = gets.chomp
-    exit! if user_input == 'exit'
-    user_input
-  end
-
   def delete_card_and_update(answer)
-    Bank.accounts[Bank.accounts.find_index(Bank.current_account)].card.delete_at(answer.to_i - 1)
-    File.open(@file_path, 'w') { |f| f.write Bank.accounts.to_yaml }
-  end
-
-  def no_active_cards
-    puts "There is no active cards!\n"
-    exit!
+    Bank.instance.accounts[Bank.instance.accounts.find_index(Bank.instance.current_account)].card.delete_at(answer.to_i - 1)
+    save
   end
 
   def cards_to_delete
     puts 'If you want to delete:'
-    Bank.current_account.card.each_with_index do |card, index|
-      puts "- #{card[:number]}, #{card[:type]}, press #{index + 1}"
+    Bank.instance.current_account.card.each_with_index do |card, index|
+      puts "- #{card.number}, #{card.type}, press #{index + 1}"
     end
     puts "press `exit` to exit\n"
   end
@@ -65,9 +52,23 @@ class Card
     card_type = gets.chomp
     validate_card_type(card_type)
     case card_type
-    when 'usual' then { type: 'usual', number: 16.times.map { rand(10) }.join, balance: 50.00 }
-    when 'capitalist' then { type: 'capitalist', number: 16.times.map { rand(10) }.join, balance: 100.00 }
-    when 'virtual' then { type: 'virtual', number: 16.times.map { rand(10) }.join, balance: 150.00 }
+    when 'usual' then UsualCard.new
+    when 'capitalist' then CapitalistCard.new
+    when 'virtual' then VirtualsCard.new
+    end
+  end
+
+  def validate_card_type(card_type)
+    raise(I18n.t(:wrong_card_type)) unless %w[usual capitalist virtual].include?(card_type)
+  end
+
+  def validate_existence_of_cards
+    raise(I18n.t(:no_active_cards)) unless Bank.instance.current_account.card.any?
+  end
+
+  def validate_card_input(answer)
+    unless answer.to_i <= Bank.instance.current_account.card.length && answer.to_i.positive?
+      raise(I18n.t(:wrong_number))
     end
   end
 end

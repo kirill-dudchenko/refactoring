@@ -5,7 +5,9 @@ module Messaging
   I18n.config.available_locales = :en
 
   def input
-    gets.chomp.strip
+    user_input = gets
+    user_input ||= ''
+    user_input.chomp!
   end
 
   def console_welcome_prompt
@@ -52,6 +54,11 @@ module Messaging
 
   def age_prompt
     puts I18n.t(:age_prompt)
+  end
+
+  def no_active_cards
+    puts I18n.t(:no_active_cards)
+    exit!
   end
 
   def wrong_card_type

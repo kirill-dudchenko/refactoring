@@ -6,6 +6,10 @@ SimpleCov.start do
 end
 
 require_relative '../lib/account'
+require_relative '../lib/card'
+require_relative '../lib/main_menu'
+require_relative '../lib/messaging'
+require_relative '../lib/money'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

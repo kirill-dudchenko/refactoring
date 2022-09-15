@@ -1,6 +1,6 @@
 module MainMenu
   def main_menu
-    puts "\nWelcome, #{Bank.current_account.name}"
+    puts "\nWelcome, #{Bank.instance.current_account.name}"
     puts I18n.t(:main_menu_message)
 
     enter_command
@@ -25,6 +25,6 @@ module MainMenu
 
   def enter_command_retry
     wrong_command
-    enter_command
+    # enter_command
   end
 end

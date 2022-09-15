@@ -11,12 +11,8 @@ RSpec.describe Account do
     withdraw_amount: 'Input the amount of money you want to withdraw'
   }.freeze
 
-  HELLO_PHRASES = [
-    'Hello, we are RubyG bank!',
-    '- If you want to create account - press `create`',
-    '- If you want to load account - press `load`',
-    '- If you want to exit - press `exit`'
-  ].freeze
+  HELLO_PHRASES =
+    "Hello, we are RubyG bank!\n - If you want to create account - press `create`\n - If you want to load account - press `load`\n - If you want to exit - press `exit`\n".freeze
 
   ASK_PHRASES = {
     name: 'Enter your name',
@@ -56,28 +52,6 @@ RSpec.describe Account do
       length: 'Your Age must be greeter then 23 and lower then 90'
     }
   }.freeze
-
-  ERROR_PHRASES = {
-    user_not_exists: 'There is no account with given credentials',
-    wrong_command: 'Wrong command. Try again!',
-    no_active_cards: "There is no active cards!\n",
-    wrong_card_type: "Wrong card type. Try again!\n",
-    wrong_number: "You entered wrong number!\n",
-    correct_amount: 'You must input correct amount of money',
-    tax_higher: 'Your tax is higher than input amount'
-  }.freeze
-
-  MAIN_OPERATIONS_TEXTS = [
-    'If you want to:',
-    '- show all cards - press SC',
-    '- create card - press CC',
-    '- destroy card - press DC',
-    '- put money on card - press PM',
-    '- withdraw money on card - press WM',
-    '- send money to another card  - press SM',
-    '- destroy account - press `DA`',
-    '- exit from account - press `exit`'
-  ].freeze
 
   CARDS = {
     usual: {
@@ -122,7 +96,7 @@ RSpec.describe Account do
       it do
         allow(current_subject).to receive_message_chain(:gets, :chomp) { 'test' }
         allow(current_subject).to receive(:exit)
-        HELLO_PHRASES.each { |phrase| expect(current_subject).to receive(:puts).with(phrase) }
+        expect { current_subject.console }.to output(HELLO_PHRASES).to_stdout
         current_subject.console
       end
     end
@@ -338,58 +312,6 @@ RSpec.describe Account do
     end
   end
 
-  describe '#main_menu' do
-    let(:name) { 'John' }
-    let(:commands) do
-      {
-        'SC' => :show_cards,
-        'CC' => :create_card,
-        'DC' => :destroy_card,
-        'PM' => :put_money,
-        'WM' => :withdraw_money,
-        'SM' => :send_money,
-        'DA' => :destroy_account,
-        'exit' => :exit
-      }
-    end
-
-    context 'with correct outout' do
-      it do
-        allow(current_subject).to receive(:show_cards)
-        allow(current_subject).to receive(:exit)
-        allow(current_subject).to receive_message_chain(:gets, :chomp).and_return('SC', 'exit')
-        current_subject.instance_variable_set(:@current_account, instance_double('Account', name: name))
-        expect { current_subject.main_menu }.to output(/Welcome, #{name}/).to_stdout
-        MAIN_OPERATIONS_TEXTS.each do |text|
-          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return('SC', 'exit')
-          expect { current_subject.main_menu }.to output(/#{text}/).to_stdout
-        end
-      end
-    end
-
-    context 'when commands used' do
-      let(:undefined_command) { 'undefined' }
-
-      it 'calls specific methods on predefined commands' do
-        current_subject.instance_variable_set(:@current_account, instance_double('Account', name: name))
-        allow(current_subject).to receive(:exit)
-
-        commands.each do |command, method_name|
-          expect(current_subject).to receive(method_name)
-          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(command, 'exit')
-          current_subject.main_menu
-        end
-      end
-
-      it 'outputs incorrect message on undefined command' do
-        current_subject.instance_variable_set(:@current_account, instance_double('Account', name: name))
-        expect(current_subject).to receive(:exit)
-        allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(undefined_command, 'exit')
-        expect { current_subject.main_menu }.to output(/#{ERROR_PHRASES[:wrong_command]}/).to_stdout
-      end
-    end
-  end
-
   describe '#destroy_account' do
     let(:cancel_input) { 'sdfsdfs' }
     let(:success_input) { 'y' }
@@ -440,7 +362,7 @@ RSpec.describe Account do
 
     it 'display cards if there are any' do
       current_subject.instance_variable_set(:@current_account, instance_double('Account', card: cards))
-      cards.each { |card| expect(current_subject).to receive(:puts).with("- #{card[:number]}, #{card[:type]}") }
+      cards.each { |card| expect(current_subject).to receive(:puts).with("- #{card.number}, #{card.type}") }
       current_subject.show_cards
     end
 
@@ -479,14 +401,14 @@ RSpec.describe Account do
 
       CARDS.each do |card_type, card_info|
         it "create card with #{card_type} type" do
-          expect(current_subject).to receive_message_chain(:gets, :chomp) { card_info[:type] }
+          expect(current_subject).to receive_message_chain(:gets, :chomp) { card_info.type }
 
           current_subject.create_card
 
           expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
           file_accounts = YAML.load_file(OVERRIDABLE_FILENAME)
-          expect(file_accounts.first.card.first[:type]).to eq card_info[:type]
-          expect(file_accounts.first.card.first[:balance]).to eq card_info[:balance]
+          expect(file_accounts.first.card.first[:type]).to eq card_info.type
+          expect(file_accounts.first.card.first[:balance]).to eq card_info.balance
           expect(file_accounts.first.card.first[:number].length).to be 16
         end
       end
@@ -525,7 +447,7 @@ RSpec.describe Account do
           allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
           expect { current_subject.destroy_card }.to output(/#{COMMON_PHRASES[:if_you_want_to_delete]}/).to_stdout
           fake_cards.each_with_index do |card, i|
-            message = /- #{card[:number]}, #{card[:type]}, press #{i + 1}/
+            message = /- #{card.number}, #{card.type}, press #{i + 1}/
             expect { current_subject.destroy_card }.to output(message).to_stdout
           end
           current_subject.destroy_card
@@ -615,7 +537,7 @@ RSpec.describe Account do
           allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
           expect { current_subject.put_money }.to output(/#{COMMON_PHRASES[:choose_card]}/).to_stdout
           fake_cards.each_with_index do |card, i|
-            message = /- #{card[:number]}, #{card[:type]}, press #{i + 1}/
+            message = /- #{card.number #{card.type press #{i + 1}/
             expect { current_subject.put_money }.to output(message).to_stdout
           end
           current_subject.put_money
@@ -714,7 +636,7 @@ RSpec.describe Account do
                 new_balance = default_balance + correct_money_amount_greater_than_tax - custom_card[:tax]
 
                 expect { current_subject.put_money }.to output(
-                  /Money #{correct_money_amount_greater_than_tax} was put on #{custom_card[:number]}. Balance: #{new_balance}. Tax: #{custom_card[:tax]}/
+                  /Money #{correct_money_amount_greater_than_tax} was put on #{custom_card.number Balance: #{new_balance}. Tax: #{custom_card[:tax]}/
                 ).to_stdout
 
                 expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
@@ -748,7 +670,7 @@ RSpec.describe Account do
           allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
           expect { current_subject.withdraw_money }.to output(/#{COMMON_PHRASES[:choose_card_withdrawing]}/).to_stdout
           fake_cards.each_with_index do |card, i|
-            message = /- #{card[:number]}, #{card[:type]}, press #{i + 1}/
+            message = /- #{card.number}, #{card.type}, press #{i + 1}/
             expect { current_subject.withdraw_money }.to output(message).to_stdout
           end
           current_subject.withdraw_money
