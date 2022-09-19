@@ -5,7 +5,6 @@ class CapitalistCard < Card
   def initialize
     super
     @type = 'capitalist'
-    @number = 16.times.map { rand(10) }.join
     @balance = 100.00
   end
 

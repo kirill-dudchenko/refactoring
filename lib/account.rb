@@ -1,7 +1,6 @@
 require_relative 'autoload'
 
 class Account
-  include SaveLoad
   include Messaging
   include MainMenu
   include Validations
@@ -10,7 +9,7 @@ class Account
   attr_accessor :card, :name
 
   def initialize
-    load_accounts
+    AccountsStore.new.load_accounts
     @card = []
   end
 
@@ -31,7 +30,7 @@ class Account
     password_input
     Bank.instance.accounts << self
     Bank.instance.current_account = self
-    save
+    AccountsStore.new.save
     main_menu
   end
 
@@ -60,10 +59,7 @@ class Account
 
   def destroy_account
     destroy_double_check
-    if input == 'y'
-      Bank.instance.accounts.delete(Bank.instance.current_account)
-      save
-    end
+    AccountsStore.new.destroy_account if input == 'y'
     exit
   end
 

@@ -86,6 +86,10 @@ module Messaging
     puts I18n.t(:input_money_to_send)
   end
 
+  def input_money_to_put
+    puts I18n.t(:input_money_to_put)
+  end
+
   def wrong_number
     puts I18n.t(:wrong_number)
   end

@@ -43,6 +43,7 @@ en:
   insufficient_funds: "You don't have enough money on card for such operation"
   exit_prompt: "press `exit` to exit\n"
   input_money_to_send: "Input the amount of money you want to withdraw"
+  input_money_to_put: "Input the amount of money you want to put on your card"
   name_empty_error: 'Your name must not be empty'
   capital_error: 'Your name must start with a capital letter'
   login_empty_error: 'Your name must not be empty'

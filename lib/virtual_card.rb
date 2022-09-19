@@ -1,11 +1,10 @@
-class VirtualsCard < Card
+class VirtualCard < Card
   attr_accessor :balance
   attr_reader :type, :number
 
   def initialize
     super
     @type = 'virtual'
-    @number = 16.times.map { rand(10) }.join
     @balance = 150.00
   end
 

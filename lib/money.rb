@@ -1,48 +1,70 @@
 class Money
-  include SaveLoad
   include Messaging
   include Validations
 
+  def initialize
+    @store = AccountsStore.new
+  end
+
   def withdraw_money
     select_card('withdraw')
-    input_withdraw_amount
-    answer = input
-    validate_amount(answer)
+    answer = money_to_withdraw
     money_left = calculate_money_left(answer)
-    validate_sufficient_funds(money_left)
-    @current_card.balance = money_left
-    withdraw_save_and_output(answer)
+    withdraw_save_and_output(answer, money_left)
   end
 
   def put_money
     select_card('put')
-    puts 'Input the amount of money you want to put on your card'
-    answer = input
-    validate_put_money(answer)
+    answer = money_to_put
     new_money_amount = @current_card.balance + answer.to_i - @current_card.put_tax(answer.to_i)
-    @current_card.balance = new_money_amount
-    put_save_and_output(answer)
+    put_save_and_output(answer, new_money_amount)
   end
 
   def send_money
     sender_card = choose_sender
     recipient_card = choose_recipient
-    input_money_to_send
-    answer = input
-    sender_balance = sender_card.balance - answer.to_i - sender_card.sender_tax(answer.to_i)
+    answer = money_to_send
+    sender_balance = new_sender_balance(answer, sender_card, recipient_card)
     recipient_balance = recipient_card.balance + answer.to_i - recipient_card.put_tax(answer.to_i)
-    validate_sender_balance(answer, sender_balance, recipient_card)
-    sender_card.balance = sender_balance
-    recipient_card.balance = recipient_balance
-    update_after_sending(answer, sender_card, sender_balance, recipient_balance)
+    update_balances(sender_card, sender_balance, recipient_card, recipient_balance)
+    sending_success(answer, sender_card, sender_balance, recipient_balance)
   end
 
   private
 
-  def update_after_sending(answer, sender_card, sender_balance, recipient_balance)
-    save
+  def sending_success(answer, sender_card, sender_balance, recipient_balance)
     puts "Money #{answer.to_i}$ was put on #{sender_card.number}. Balance: #{recipient_balance}. Tax: #{sender_card.put_tax(answer.to_i)}$\n"
     puts "Money #{answer.to_i}$ was put on #{@recipient}. Balance: #{sender_balance}. Tax: #{sender_card.sender_tax(answer.to_i)}$\n"
+  end
+
+  def new_sender_balance(answer, sender_card, recipient_card)
+    sender_balance = sender_card.balance - answer.to_i - sender_card.sender_tax(answer.to_i)
+    validate_sender_balance(answer, sender_balance, recipient_card)
+    sender_balance
+  end
+
+  def money_to_withdraw
+    input_withdraw_amount
+    answer = input
+    validate_amount(answer)
+    answer
+  end
+
+  def money_to_send
+    input_money_to_send
+    input
+  end
+
+
+  def money_to_put
+    asnwer = input_money_to_put
+    validate_put_money(answer)
+    answer
+  end
+
+  def update_balances(sender_card, sender_balance, recipient_card, recipient_balance)
+    @store.update_card(sender_card, sender_balance)
+    @store.update_card(recipient_card, recipient_balance)
   end
 
   def choose_sender
@@ -77,27 +99,21 @@ class Money
     @current_card = Bank.instance.current_account.card[answer.to_i - 1]
   end
 
-  def withdraw_save_and_output(answer)
-    new_accounts = []
-    Bank.instance.accounts.each do |ac|
-      ac.login == Bank.instance.current_account.login ? new_accounts.push(Bank.instance.current_account) : new_accounts.push(ac)
-    end
-    save
+  def withdraw_save_and_output(answer, balance)
+    @store.update_card(@current_card, balance)
     puts "Money #{answer.to_i} withdrawed from #{@current_card.number}$. Money left:
     #{@current_card.balance}$. Tax: #{@current_card.withdraw_tax(answer.to_i)}$"
   end
 
-  def put_save_and_output(answer)
-    new_accounts = []
-    Bank.instance.accounts.each do |ac|
-      ac.login == Bank.instance.current_account.login ? new_accounts.push(Bank.instance.current_account) : new_accounts.push(ac)
-    end
-    save
+  def put_save_and_output(answer, balance)
+    @store.update_card(@current_card, balance)
     puts "Money #{answer.to_i} was put on #{@current_card.number}. Balance: #{@current_card.balance}. Tax: #{@current_card.put_tax(answer.to_i)}"
   end
 
   def calculate_money_left(input)
-    @current_card.balance - input.to_i - @current_card.withdraw_tax(input.to_i)
+    money_left = @current_card.balance - input.to_i - @current_card.withdraw_tax(input.to_i)
+    validate_sufficient_funds(money_left)
+    money_left
   end
 
   def validate_sender_balance(answer, sender_balance, recipient_card)
