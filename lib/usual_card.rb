@@ -1,7 +1,4 @@
 class UsualCard < Card
-  attr_accessor :balance
-  attr_reader :type, :number
-
   def initialize
     super
     @type = 'usual'

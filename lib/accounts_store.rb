@@ -12,7 +12,7 @@ class AccountsStore
     end
     save
   end
-  
+
   def destroy_card(account_to_delete)
     Bank.instance.accounts[Bank.instance.accounts.find_index(Bank.instance.current_account)].card.delete_at(account_to_delete.to_i - 1)
     save
@@ -20,6 +20,12 @@ class AccountsStore
 
   def load_accounts
     Bank.instance.accounts = File.exist?('accounts.yml') ? YAML.load_file('accounts.yml') : []
+  end
+
+  def create_account(account)
+    Bank.instance.accounts << account
+    Bank.instance.current_account = account
+    save
   end
 
   def destroy_account

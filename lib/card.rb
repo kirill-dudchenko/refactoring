@@ -2,6 +2,15 @@ class Card
   include Validations
   include Messaging
 
+  attr_accessor :balance
+  attr_reader :type, :number
+
+  # CARD_TYPES = {
+  #   'usual' => UsualCard,
+  #   'virtual' => VirtualCard,
+  #   'capitalist' => CapitalistCard
+  # }.freeze
+
   def initialize
     @number = 16.times.map { rand(10) }.join
   end
@@ -12,8 +21,18 @@ class Card
     AccountsStore.new.add_card(card)
   end
 
+  # def create_card(card_type)
+  #   raise CardError, I18n unless CARD_TYPES.keys.include?(card_type)
+
+  #   puts I18n.t(:create_card_prompt)
+  #   new_card = CARDS[card_type].new
+  #   cards.nil? ? @cards = [new_card] : @cards << new_card
+  #   AccountsStore.new.update_account(self)
+  # end
+
   def destroy_card
     return no_active_cards unless Bank.instance.current_account.card.any?
+
     answer = cards_to_delete
     input == 'y' ? AccountsStore.new.destroy_card(answer) : return
   end

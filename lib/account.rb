@@ -9,18 +9,7 @@ class Account
   attr_accessor :card, :name
 
   def initialize
-    AccountsStore.new.load_accounts
     @card = []
-  end
-
-  def console
-    puts Bank.instance.accounts
-    puts I18n.t(:console_welcome_prompt)
-    case input
-    when I18n.t(:create_command) then create
-    when I18n.t(:load_command) then load
-    else exit
-    end
   end
 
   def create
@@ -28,9 +17,8 @@ class Account
     age_input
     login_input
     password_input
-    Bank.instance.accounts << self
-    Bank.instance.current_account = self
-    AccountsStore.new.save
+    account = self
+    AccountsStore.new.create_account(account)
     main_menu
   end
 
