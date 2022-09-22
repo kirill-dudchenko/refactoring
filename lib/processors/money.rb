@@ -56,7 +56,7 @@ class Money
   end
 
   def money_to_put
-    asnwer = input_money_to_put
+    answer = input_money_to_put
     validate_put_money(answer)
     answer
   end

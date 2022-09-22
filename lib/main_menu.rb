@@ -7,16 +7,13 @@ module MainMenu
   end
 
   def enter_command
-    card = Card.new
-    money = Money.new
-
     case input
-    when 'SC' then card.show_cards
-    when 'CC' then card.create_card
-    when 'DC' then card.destroy_card
-    when 'PM' then money.put_money
-    when 'WM' then money.withdraw_money
-    when 'SM' then money.send_money
+    when 'SC' then show_cards
+    when 'CC' then create_card
+    when 'DC' then destroy_card
+    when 'PM' then put_money
+    when 'WM' then withdraw_money
+    when 'SM' then send_money
     when 'DA' then destroy_account
     when 'exit' then exit
     else enter_command_retry
@@ -25,6 +22,6 @@ module MainMenu
 
   def enter_command_retry
     wrong_command
-    # enter_command
+    enter_command
   end
 end

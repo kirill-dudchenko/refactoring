@@ -1,108 +1,52 @@
-require_relative 'autoload'
-
 class Account
   include Messaging
   include MainMenu
-  include Validations
 
-  attr_reader :login, :password
-  attr_accessor :card, :name
+  attr_accessor :name, :age, :login, :password, :card
 
   def initialize
+    @name = ''
+    @age = 0
+    @login = ''
+    @password = ''
     @card = []
   end
 
   def create
-    name_input
-    age_input
-    login_input
-    password_input
-    account = self
-    AccountsStore.new.create_account(account)
+    AccountProcessor.new.create
     main_menu
   end
 
   def load
-    return create_the_first_account unless Bank.instance.accounts.any?
-
-    check_credentials(input_login, input_password)
+    AccountProcessor.new.load
     main_menu
   end
 
-  def check_credentials(login, password)
-    if Bank.instance.accounts.map do |account|
-      { login: account.login, password: account.password }
-    end.include?({ login: login, password: password })
-      Bank.instance.current_account = Bank.instance.accounts.select { |account| login == account.login }.first
-    else
-      no_such_account
-      load
-    end
+  def show_cards
+    Card.new.show_cards
   end
 
-  def create_the_first_account
-    puts I18n.t(:create_first_account_prompt)
-    input == 'y' ? create : console
+  def create_card
+    Card.new.create_card
+  end
+
+  def destroy_card
+    Card.new.destroy_card
+  end
+
+  def withdraw_money
+    Money.new.withdraw_money
+  end
+
+  def send_money
+    Money.new.send_money
+  end
+
+  def put_money
+    Money.new.put_money
   end
 
   def destroy_account
-    destroy_double_check
-    AccountsStore.new.destroy_account if input == 'y'
-    exit
-  end
-
-  private
-
-  def validate_name(name)
-    validate_non_empty(name, I18n.t(:name_empty_error))
-    validate_capital_letter(name, I18n.t(:capital_error))
-  end
-
-  def validate_login(login)
-    validate_non_empty(login, I18n.t(:login_empty_error))
-    validate_length_less(login, I18n.t(:short_login_error), 4)
-    validate_length_more(login, I18n.t(:long_login_error), 20)
-    raise(I18n.t(:account_exists_error)) if !Bank.instance.accounts.empty? && (Bank.instance.accounts.map do |account|
-                                                                               end.include? login)
-  end
-
-  def validate_password(password)
-    validate_non_empty(password, I18n.t(:password_empty_error))
-    validate_length_less(password, I18n.t(:short_password_error), 6)
-    validate_length_more(password, I18n.t(:long_password_error), 30)
-  end
-
-  def validate_age(age)
-    validate_is_integer(age, I18n.t(:integer_error))
-    validate_integer_less(age, I18n.t(:young_age_error), 23)
-    validate_integer_more(age, I18n.t(:old_age_error), 90)
-  end
-
-  def name_input
-    name_prompt
-    user_input = input
-    validate_name(user_input)
-    @name = user_input
-  end
-
-  def login_input
-    login_prompt
-    user_input = input
-    validate_login(user_input)
-    @login = user_input
-  end
-
-  def password_input
-    password_prompt
-    user_input = input
-    validate_password(user_input)
-    @password = user_input
-  end
-
-  def age_input
-    age_prompt
-    age = input.to_i
-    validate_age(age)
-    @age = age.to_i
+    AccountsStore.new.destroy_account
   end
 end

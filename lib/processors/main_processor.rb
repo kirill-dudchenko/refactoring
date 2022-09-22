@@ -1,4 +1,4 @@
-class Processor
+class MainProcessor
   include Messaging
 
   def initialize

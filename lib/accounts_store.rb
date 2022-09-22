@@ -1,4 +1,6 @@
 class AccountsStore
+  include Messaging
+
   def add_card(card)
     Bank.instance.accounts[Bank.instance.accounts.find_index(Bank.instance.current_account)].card << card
     save
@@ -29,7 +31,8 @@ class AccountsStore
   end
 
   def destroy_account
-    Bank.instance.accounts.delete(Bank.instance.current_account)
+    destroy_double_check
+    Bank.instance.accounts.delete(Bank.instance.current_account) if input == 'y'
     save
   end
 

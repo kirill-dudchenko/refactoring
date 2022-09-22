@@ -1,16 +1,16 @@
-class Card
+class CardProcessor
   include Validations
   include Messaging
 
   attr_accessor :balance
   attr_reader :type, :number
 
-  def initialize
-    @number = 16.times.map { rand(10) }.join
+  def show_cards
+    cards = Bank.instance.current_account.card
+    cards.empty? ? no_active_cards : cards.each { |card| puts "- #{card.number}, #{card.type}" }
   end
 
   def create_card
-    puts I18n.t(:create_card_prompt)
     card = card_type
     AccountsStore.new.add_card(card)
   end
@@ -20,11 +20,6 @@ class Card
 
     answer = cards_to_delete
     input == 'y' ? AccountsStore.new.destroy_card(answer) : return
-  end
-
-  def show_cards
-    cards = Bank.instance.current_account.card
-    cards.empty? ? no_active_cards : cards.each { |card| puts "- #{card.number}, #{card.type}" }
   end
 
   private
@@ -42,6 +37,7 @@ class Card
   end
 
   def card_type
+    puts I18n.t(:create_card_prompt)
     card_type = gets.chomp
     validate_card_type(card_type)
     case card_type

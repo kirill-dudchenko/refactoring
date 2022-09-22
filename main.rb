@@ -1,3 +1,3 @@
-require_relative './lib/autoload'
+require_relative './lib/helpers/autoload'
 
-Processor.new.console
+MainProcessor.new.console
