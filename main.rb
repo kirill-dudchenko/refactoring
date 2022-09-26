@@ -1,3 +1,3 @@
-require_relative 'account'
+require_relative './lib/helpers/autoload'
 
-Account.new.console
+MainProcessor.new.call

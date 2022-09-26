@@ -1,0 +1,59 @@
+en:
+  console_welcome_prompt: "Hello, we are RubyG bank!\n
+  - If you want to create account - press `create`\n
+  - If you want to load account - press `load`\n
+  - If you want to exit - press `exit`"
+  create_command: "create"
+  load_command: "load"
+  main_menu_message: "If you want to:\n
+  - show all cards - press SC\n
+  - create card - press CC\n
+  - destroy card - press DC\n
+  - put money on card - press PM\n
+  - withdraw money on card - press WM\n
+  - send money to another card  - press SM'\n
+  - destroy account - press `DA`\n
+  - exit from account - press `exit`"
+  create_first_account_prompt: "There is no active accounts, do you want to be the first?[y/n]"
+  enter_login: "Enter your login"
+  enter_password: "Enter your password"
+  create_card_prompt: "You could create one of 3 card types
+  - Usual card. 2% tax on card INCOME. 20$ tax on SENDING money from this card. 5% tax on WITHDRAWING money. For creation this card - press `usual`\n
+  - Capitalist card. 10$ tax on card INCOME. 10% tax on SENDING money from this card. 4$ tax on WITHDRAWING money. For creation this card - press `capitalist`\n
+  - Virtual card. 1$ tax on card INCOME. 1$ tax on SENDING money from this card. 12% tax on WITHDRAWING money. For creation this card - press `virtual`\n
+  - For exit - press `exit`"
+  wrong_command: "Wrong command. Try again!"
+  no_such_account: "There is no account with given credentials"
+  destroy_double_check: "Are you sure you want to destroy account?[y/n]"
+  name_prompt: "Enter your name"
+  login_prompt: "Enter your login"
+  password_prompt: "Enter your password"
+  age_prompt: "Enter your age"
+  wrong_card_type: "Wrong card type. Try again!\n"
+  choose_card_withdraw: "Choose the card for withdrawing:"
+  choose_card_put: "Choose the card for putting:"
+  choose_card_sender: "Choose the card for sending:"
+  choose_card_recipient: "Enter the recipient card:"
+  no_active_cards: "There is no active cards!\n"
+  wrong_number: "You entered wrong number!\n"
+  wrong_sender: "Choose correct card"
+  wrong_recipient: "Please, input correct number of card"
+  input_withdraw_amount: "Input the amount of money you want to withdraw"
+  incorrect_amount: "You must input correct amount of $"
+  insufficient_funds: "You don't have enough money on card for such operation"
+  exit_prompt: "press `exit` to exit\n"
+  input_money_to_send: "Input the amount of money you want to withdraw"
+  input_money_to_put: "Input the amount of money you want to put on your card"
+  name_empty_error: 'Your name must not be empty'
+  capital_error: 'Your name must start with a capital letter'
+  login_empty_error: 'Your name must not be empty'
+  short_login_error: 'Login must be longer then 4 symbols'
+  long_login_error: 'Login must be shorter then 20 symbols'
+  password_empty_error: 'Password must be present'
+  short_password_error: 'Password must be longer then 6 symbols'
+  long_password_error: 'Password must be shorter then 30 symbols'
+  account_exists_error: 'Such account is already exists'
+  integer_error: 'Your Age must be Integer'
+  young_age_error: 'Your Age must be greater than 22'
+  old_age_error: 'Your Age must be less than 91'
+  tax_higher_than_input: 'Your tax is higher than input amount'
