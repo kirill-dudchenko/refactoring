@@ -31,8 +31,7 @@ class AccountsStore
   end
 
   def destroy_account
-    destroy_double_check
-    Bank.instance.accounts.delete(Bank.instance.current_account) if input == 'y'
+    Bank.instance.accounts.delete(Bank.instance.current_account)
     save
   end
 

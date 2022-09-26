@@ -17,6 +17,11 @@ class AccountProcessor
     check_credentials(input_login, input_password)
   end
 
+  def destroy_account
+    destroy_double_check
+    AccountsStore.new.destroy_account if input == 'y' 
+  end
+
   private
 
   def name_input

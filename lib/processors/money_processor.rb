@@ -1,4 +1,4 @@
-class Money
+class MoneyProcessor
   include Messaging
   include Validations
 
